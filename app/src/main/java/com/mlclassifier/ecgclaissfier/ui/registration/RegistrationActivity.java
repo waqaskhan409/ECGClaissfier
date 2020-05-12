@@ -52,7 +52,6 @@ public class RegistrationActivity extends BaseActivity {
 
 
 
-
     }
 
 
@@ -82,23 +81,19 @@ public class RegistrationActivity extends BaseActivity {
             this.passwordEt.setError(getString(R.string.txt_password_error_length));
             this.passwordEt.requestFocus();
         } else{
-            showProgressDialogue(getString(R.string.loading), getString(R.string.txt_login_loading));
             User usser = new User();
             usser.setFull_name(fullname);
             usser.setEmail(email);
             usser.setPassword(password);
             usser.getPhone();
             usser.setLogin(true);
-//            if(loginViewModel.setUser(userName, password)){
-                Intent intent =  new Intent(this, MainActivity.class);
-                intent.putExtra(getString(R.string.txt_entity),usser);
-                startActivity(intent);
-                dissmissProgressDialogue();
-                finish();
-//            }else {
+            registrationViewModel.registeredUser(usser, RegistrationActivity.this);
+//                Intent intent =  new Intent(this, MainActivity.class);
+//                intent.putExtra(getString(R.string.txt_entity),usser);
+//                startActivity(intent);
 //                dissmissProgressDialogue();
-//                showErrorSnackBar(getString(R.string.txt_wrong_password));
-//            }
+//                finish();
+
 
         }
 

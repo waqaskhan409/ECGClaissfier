@@ -4,11 +4,23 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    String full_name;
-    String email;
-    String password;
-    String phone;
+    private String id;
+    private String full_name;
+    private String email;
+    private String password;
+    private String phone;
     boolean login;
+
+    public User() {
+    }
+
+    public User(String id, String full_name, String email, String password, String phone) {
+        this.id = id;
+        this.full_name = full_name;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+    }
 
     public boolean isLogin() {
         return login;
@@ -48,5 +60,13 @@ public class User implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

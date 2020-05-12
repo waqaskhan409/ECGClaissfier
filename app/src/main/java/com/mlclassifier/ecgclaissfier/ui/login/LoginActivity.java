@@ -93,20 +93,11 @@ public class LoginActivity extends BaseActivity {
 //            this.password.setError(getString(R.string.txt_password_error_length));
 //            this.password.requestFocus();
         } else{
-            showProgressDialogue(getString(R.string.loading), getString(R.string.txt_login_loading));
             User usser = new User();
             usser.setEmail(userName);
             usser.setPassword(password);
-//            if(loginViewModel.setUser(userName, password)){
-                Intent intent =  new Intent(this, MainActivity.class);
-                intent.putExtra(getString(R.string.txt_entity),usser);
-                startActivity(intent);
-                dissmissProgressDialogue();
-                finish();
-//            }else {
-//                dissmissProgressDialogue();
-//                showErrorSnackBar(getString(R.string.txt_wrong_password));
-//            }
+            loginViewModel.loginUser(usser, LoginActivity.this);
+
 
         }
 
