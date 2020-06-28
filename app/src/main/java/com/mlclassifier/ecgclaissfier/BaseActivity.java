@@ -1,6 +1,7 @@
 package com.mlclassifier.ecgclaissfier;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
@@ -9,11 +10,15 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.mlclassifier.ecgclaissfier.model.Constants;
+import com.mlclassifier.ecgclaissfier.ui.login.LoginActivity;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import static com.mlclassifier.ecgclaissfier.model.Constants.MY_PREFS_NAME;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -151,6 +156,13 @@ public class BaseActivity extends AppCompatActivity {
         }
 
         return sb.toString().trim();
+    }
+
+    public void setPermanentLogin(String email){
+        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putBoolean(Constants.IS_LOGGED_IN, true);
+        editor.putString(Constants.EMAIL, email);
+        editor.apply();
     }
 
 }

@@ -62,8 +62,8 @@ public class RegistrationActivity extends BaseActivity {
     public void registrationSubmit(){
         String fullname, email, phone, password;
         fullname = this.fullnameEt.getText().toString();
-        email = this.fullnameEt.getText().toString();
-        phone = this.fullnameEt.getText().toString();
+        email = this.emailEt.getText().toString();
+        phone = this.phoneEt.getText().toString();
         password = this.passwordEt.getText().toString();
         if(fullname.isEmpty()){
             this.fullnameEt.setError(getString(R.string.txt_username_error));

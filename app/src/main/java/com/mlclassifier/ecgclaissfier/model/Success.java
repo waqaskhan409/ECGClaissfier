@@ -1,6 +1,8 @@
 package com.mlclassifier.ecgclaissfier.model;
 
-public class Success {
+import java.io.Serializable;
+
+public class Success implements Serializable {
     private String success;
 
     private String error;

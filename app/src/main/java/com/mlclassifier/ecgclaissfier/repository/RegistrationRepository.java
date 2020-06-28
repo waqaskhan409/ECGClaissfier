@@ -19,7 +19,7 @@ public class RegistrationRepository {
 
     public void registeredUser(User user, RegistrationActivity registrationActivity){
         RestApiInterface service = RestApi.getApi();
-        Call<Success> successCall = service.registration(user.getId(), user.getFull_name(), user.getPhone(), user.getEmail(), user.getPassword());
+        Call<Success> successCall = service.registration(user.getId(), user.getFull_name(), user.getPhone(), user.getPassword(), user.getEmail());
 
         successCall.enqueue(new Callback<Success>() {
             @Override
@@ -29,6 +29,7 @@ public class RegistrationRepository {
                     registrationActivity.showSuccessSnackBar(response.body().getSuccess());
                     Intent intent = new Intent(registrationActivity, MainActivity.class);
                     registrationActivity.startActivity(intent);
+                    registrationActivity.setPermanentLogin(user.getEmail());
 
                 }else {
                     registrationActivity.dissmissProgressDialogue();

@@ -3,6 +3,7 @@ package com.mlclassifier.ecgclaissfier.ui.home;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -15,14 +16,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedDispatcher;
+import androidx.activity.OnBackPressedDispatcherOwner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -30,11 +36,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.mlclassifier.ecgclaissfier.MainActivity;
 import com.mlclassifier.ecgclaissfier.R;
+import com.mlclassifier.ecgclaissfier.model.Constants;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static android.content.Context.MODE_PRIVATE;
+import static com.mlclassifier.ecgclaissfier.model.Constants.MY_PREFS_NAME;
 
 public class HomeFragment extends Fragment {
 
@@ -45,6 +57,7 @@ public class HomeFragment extends Fragment {
     private int READ_STORAGE_PERMISSION_REQUEST_CODE = 1000;
     private String[] galleryPermissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
+    public  Uri selectedImage;
 
 
 
@@ -60,6 +73,16 @@ public class HomeFragment extends Fragment {
     ImageView fabSend;
 
 
+     @BindView(R.id.predictionLayout)
+    LinearLayout predictionLayout;
+
+
+    @BindView(R.id.prediction)
+    TextView textView;
+
+
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
@@ -69,17 +92,19 @@ public class HomeFragment extends Fragment {
             unbinder = ButterKnife.bind(this, root);
         }
 
-
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
-            public void onChanged(@Nullable String s) {
+            public void onChanged(String s) {
+                if(s.equals(Constants.VISIBILITY_GONE)) {
+                    predictionLayout.setVisibility(View.GONE);
+                }else {
+                    predictionLayout.setVisibility(View.VISIBLE);
+                    textView.setText("Test results: " + s);
+                }
             }
-
         });
 
         setButtonHide();
-
-
 
         return root;
     }
@@ -91,7 +116,7 @@ public class HomeFragment extends Fragment {
 
         if (requestCode == PICK_IMAGE) {
             //TODO: action
-            Uri selectedImage = data.getData();
+            selectedImage = data.getData();
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
             Cursor cursor = getActivity().getContentResolver().query(selectedImage,
@@ -103,7 +128,6 @@ public class HomeFragment extends Fragment {
             cursor.close();
 
             bitmap = BitmapFactory.decodeFile(picturePath);
-//            imageClassify.setImageURI(selectedImage);
             imageClassify.setImageBitmap(bitmap);
             setButtonHide();
         }
@@ -113,6 +137,22 @@ public class HomeFragment extends Fragment {
     @OnClick(R.id.fabSend)
     public void sendImage(){
         ((MainActivity)getActivity()).showSuccessSnackBar("To be implemented");
+         File attachImage = new File((getRealPathFromURI(selectedImage)));
+        SharedPreferences prefs = ((MainActivity)getActivity()).getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+         homeViewModel.sendImage(attachImage, ((MainActivity)getActivity()), prefs, homeViewModel);
+    }
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getActivity().getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
     }
 
     @OnClick(R.id.fab)

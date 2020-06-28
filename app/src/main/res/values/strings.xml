@@ -10,6 +10,7 @@
     <string name="menu_home">Home</string>
 
     <string name="home_second">Home Second</string>
+    <string name="instruction">Some basic instruction \n * This model is trained by generic data . \n * This model may predict not accurate results.</string>
     <string name="app_vendor_name">ECG Classifier</string>
     <string name="login_text">Login</string>
     <string name="txt_username">Enter email address</string>
@@ -32,4 +33,8 @@
     <string name="menu_history">History</string>
     <string name="menu_analytics">Analytics</string>
     <string name="menu_logout">Logout</string>
+    <string name="txt_lab_test_result">Test results</string>
+    <string name="txt_patient_name">Patient email</string>
+    <string name="date_creation">Date Creation</string>
+    <string name="description">This Statistics show the generic graph from the existing from database</string>
 </resources>

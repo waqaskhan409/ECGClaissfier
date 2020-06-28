@@ -1,6 +1,7 @@
 package com.mlclassifier.ecgclaissfier;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -9,10 +10,12 @@ import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.mlclassifier.ecgclaissfier.model.Constants;
 import com.mlclassifier.ecgclaissfier.ui.login.LoginActivity;
 
 import androidx.annotation.NonNull;
@@ -24,10 +27,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.UUID;
+
+import static com.mlclassifier.ecgclaissfier.model.Constants.MY_PREFS_NAME;
+
 public class MainActivity extends BaseActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-
+    public TextView name;
+    public TextView email;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +45,17 @@ public class MainActivity extends BaseActivity {
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        View view = navigationView.getHeaderView(0);
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        prefs.getString(Constants.EMAIL, "email@gmail.com");
+        prefs.getString(Constants.ID, UUID.randomUUID().toString());
+
+
+        name = view.findViewById(R.id.name);
+        email = view.findViewById(R.id.email);
+        name.setText(prefs.getString(Constants.ID, UUID.randomUUID().toString()));
+        email.setText(prefs.getString(Constants.EMAIL, "email@gmail.com"));
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -61,17 +80,19 @@ public class MainActivity extends BaseActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if(item.getItemId() == R.id.nav_logout){
+            SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+            editor.putBoolean(Constants.IS_LOGGED_IN, false);
+            editor.apply();
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+            finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
     }
 
     @Override

@@ -48,20 +48,7 @@ public class LoginActivity extends BaseActivity {
         }
         loginViewModel =
                 ViewModelProviders.of(this).get(LoginViewModel.class);
-//        if(loginViewModel.logingIn()){
-//            if(loginViewModel.entity.getLoggedIn()){
-//                Intent intent = new Intent(this, MainActivity.class);
-//                intent.putExtra(getString(R.string.txt_entity), loginViewModel.entity);
-//                startActivity(intent);
-//                finish();
-//            }else {
-//                this.userName.setText(loginViewModel.entity.getUserName());
-//                Log.d(TAG, "onCreate: "+ loginViewModel.entity.getPassword());
-//                Log.d(TAG, "onCreate: "+ loginViewModel.entity.getLoggedIn());
-//                this.userName.setEnabled(false);
-//
-//            }
-//        }
+
 
 
 
